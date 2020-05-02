@@ -54,6 +54,7 @@ export interface AppOptions {
     x: number;
     y: number;
     zoom: number;
+    iconStatus: string;
   };
 }
 
