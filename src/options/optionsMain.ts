@@ -92,7 +92,7 @@ export async function getOptions(rawOptions: any): Promise<AppOptions> {
       x: rawOptions.x,
       y: rawOptions.y,
       zoom: rawOptions.zoom || 1.0,
-      iconStatus: rawOptions.iconStatus || null,
+      iconStatus: rawOptions.iconStatus || "",
     },
   };
 
@@ -137,10 +137,6 @@ export async function getOptions(rawOptions: any): Promise<AppOptions> {
 
   if (rawOptions.honest) {
     options.nativefier.userAgent = null;
-  }
-
-  if (rawOptions.iconStatus) {
-    options.nativefier.counter = true;
   }
 
   if (options.packager.platform.toLowerCase() === 'windows') {
