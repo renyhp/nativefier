@@ -143,6 +143,10 @@ if (require.main === module) {
       'the icon file to use as the icon status for the app (should be a .png)',
     )
     .option(
+      '--icon-tray <value>',
+      'the icon file to use as the tray icon for the app (should be a .png)',
+    )
+    .option(
       '--width <value>',
       'set window default width; defaults to 1280px',
       parseInt,

@@ -93,6 +93,7 @@ export async function getOptions(rawOptions: any): Promise<AppOptions> {
       y: rawOptions.y,
       zoom: rawOptions.zoom || 1.0,
       iconStatus: rawOptions.iconStatus || '',
+      iconTray: rawOptions.iconTray || '',
     },
   };
 
@@ -138,8 +139,9 @@ export async function getOptions(rawOptions: any): Promise<AppOptions> {
   if (rawOptions.honest) {
     options.nativefier.userAgent = null;
   }
-
-  if (options.packager.platform.toLowerCase() === 'windows') {
+  
+  const platform = options.packager.platform.toLowerCase();
+  if (platform === 'windows') {
     options.packager.platform = 'win32';
   }
 

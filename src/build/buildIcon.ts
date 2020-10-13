@@ -29,15 +29,14 @@ function iconIsIcns(iconPath: string): boolean {
 export async function convertIconIfNecessary(
   options: AppOptions,
 ): Promise<void> {
-  if (!options.packager.icon && !options.nativefier.iconStatus) {
-    log.debug(
-      'Option "icon" and "iconStatus" not set, skipping icon conversion.',
-    );
-    return;
-  }
+  //TODO refactor (this is just a bunch of copy-paste)
 
   if (options.packager.platform === 'win32') {
-    if (iconIsIco(options.packager.icon)) {
+    if (!options.packager.icon)
+      log.debug(
+        'Options "icon" not set, skipping icon conversion.',
+      );
+    else if (iconIsIco(options.packager.icon)) {
       log.debug(
         'Building for Windows and icon is already a .ico, no conversion needed',
       );
@@ -50,7 +49,11 @@ export async function convertIconIfNecessary(
       }
     }
 
-    if (iconIsIco(options.nativefier.iconStatus)) {
+    if (!options.nativefier.iconStatus)
+      log.debug(
+        'Options "iconStatus" not set, skipping icon conversion.',
+      );
+    else if (iconIsIco(options.nativefier.iconStatus)) {
       log.debug(
         'Building for Windows and icon-status is already a .ico, no conversion needed',
       );
@@ -65,8 +68,32 @@ export async function convertIconIfNecessary(
         log.warn('Failed to convert icon-status to .ico, skipping.', error);
       }
     }
+
+    if (!options.nativefier.iconTray)
+      log.debug(
+        'Options "iconTray" not set, skipping icon conversion.',
+      );
+    else if (iconIsIco(options.nativefier.iconTray)) {
+      log.debug(
+        'Building for Windows and icon-tray is already a .ico, no conversion needed',
+      );
+    } else {
+      try {
+        const iconPath = await convertToIco(
+          options.nativefier.iconTray,
+          'icon-tray',
+        );
+        options.nativefier.iconTray = iconPath;
+      } catch (error) {
+        log.warn('Failed to convert icon-tray to .ico, skipping.', error);
+      }
+    }
   } else if (options.packager.platform === 'linux') {
-    if (iconIsPng(options.packager.icon)) {
+    if (!options.packager.icon)
+      log.debug(
+        'Options "icon" not set, skipping icon conversion.',
+      );
+    else if (iconIsPng(options.packager.icon)) {
       log.debug(
         'Building for Linux and icon is already a .png, no conversion needed',
       );
@@ -79,7 +106,11 @@ export async function convertIconIfNecessary(
       }
     }
 
-    if (iconIsPng(options.nativefier.iconStatus)) {
+    if (!options.nativefier.iconStatus)
+      log.debug(
+        'Options "iconStatus" not set, skipping icon conversion.',
+      );
+    else if (iconIsPng(options.nativefier.iconStatus)) {
       log.debug(
         'Building for Linux and icon-status is already a .png, no conversion needed',
       );
@@ -94,8 +125,32 @@ export async function convertIconIfNecessary(
         log.warn('Failed to convert icon-status to .png, skipping.', error);
       }
     }
+
+    if (!options.nativefier.iconTray)
+      log.debug(
+        'Options "iconTray" not set, skipping icon conversion.',
+      );
+    else if (iconIsPng(options.nativefier.iconTray)) {
+      log.debug(
+        'Building for Linux and icon-tray is already a .png, no conversion needed',
+      );
+    } else {
+      try {
+        const iconPath = await convertToPng(
+          options.nativefier.iconTray,
+          'icon-tray',
+        );
+        options.nativefier.iconTray = iconPath;
+      } catch (error) {
+        log.warn('Failed to convert icon-tray to .png, skipping.', error);
+      }
+    }
   } else if (isOSX()) {
-    if (iconIsIcns(options.packager.icon)) {
+    if (!options.packager.icon)
+      log.debug(
+        'Options "icon" not set, skipping icon conversion.',
+      );
+    else if (iconIsIcns(options.packager.icon)) {
       log.debug(
         'Building for macOS and icon is already a .icns, no conversion needed',
       );
@@ -109,7 +164,11 @@ export async function convertIconIfNecessary(
       }
     }
 
-    if (iconIsIcns(options.nativefier.iconStatus)) {
+    if (!options.nativefier.iconStatus)
+      log.debug(
+        'Options "iconStatus" not set, skipping icon conversion.',
+      );
+    else if (iconIsIcns(options.nativefier.iconStatus)) {
       log.debug(
         'Building for macOS and icon-status is already a .icns, no conversion needed',
       );
@@ -122,6 +181,27 @@ export async function convertIconIfNecessary(
         options.packager.icon = iconPath;
       } catch (error) {
         log.warn('Failed to convert icon-status to .icns, skipping.', error);
+        options.packager.icon = undefined;
+      }
+    }
+
+    if (!options.nativefier.iconTray)
+      log.debug(
+        'Options "iconTray" not set, skipping icon conversion.',
+      );
+    else if (iconIsIcns(options.nativefier.iconTray)) {
+      log.debug(
+        'Building for macOS and icon-tray is already a .icns, no conversion needed',
+      );
+    } else {
+      try {
+        const iconPath = await convertToIcns(
+          options.nativefier.iconTray,
+          'icon-tray',
+        );
+        options.packager.icon = iconPath;
+      } catch (error) {
+        log.warn('Failed to convert icon-Tray to .icns, skipping.', error);
         options.packager.icon = undefined;
       }
     }

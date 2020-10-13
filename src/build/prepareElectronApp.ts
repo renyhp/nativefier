@@ -68,6 +68,7 @@ function pickElectronAppArgs(options: AppOptions): any {
     y: options.nativefier.y,
     zoom: options.nativefier.zoom,
     iconStatus: options.nativefier.iconStatus,
+    iconTray: options.nativefier.iconTray,
   };
 }
 

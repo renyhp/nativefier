@@ -2,6 +2,7 @@ import { app, Tray, Menu, ipcMain, nativeImage, BrowserWindow } from 'electron';
 
 import {
   getAppIcon,
+  getAppIconTray,
   getAppIconStatus,
   getCounterValue,
 } from '../helpers/helpers';
@@ -13,7 +14,7 @@ export function createTrayIcon(
   const options = { ...nativefierOptions };
 
   if (options.tray) {
-    const iconPath = getAppIcon();
+    const iconPath = getAppIconTray();
     const nimage = nativeImage.createFromPath(iconPath);
     const iconStatusPath = getAppIconStatus();
     const nimageStatus = nativeImage.createFromPath(iconStatusPath);
@@ -40,39 +41,31 @@ export function createTrayIcon(
 
     appIcon.on('click', onClick);
 
-    if (options.iconStatus) {
-      mainWindow.on('page-title-updated', (e, title) => {
-        const counterValue = getCounterValue(title);
-        if (!mainWindow.isFocused() && counterValue) {
-          appIcon.setImage(nimageStatus);
-        } else {
-          appIcon.setImage(nimage);
-        }
-      });
-      mainWindow.on('focus', () => {
-        appIcon.setImage(nimage);
-      });
-    }
-
     if (options.counter) {
       mainWindow.on('page-title-updated', (e, title) => {
         const counterValue = getCounterValue(title);
         if (counterValue) {
           appIcon.setToolTip(`(${counterValue})  ${options.name}`);
+          appIcon.setImage(nimageStatus);
         } else {
           appIcon.setToolTip(options.name);
+          appIcon.setImage(nimage);
         }
       });
     } else {
+      let counterValue = 0;
       ipcMain.on('notification', () => {
         if (mainWindow.isFocused()) {
           return;
         }
         appIcon.setToolTip(`•  ${options.name}`);
+        appIcon.setImage(nimageStatus);
       });
 
       mainWindow.on('focus', () => {
+        counterValue = 0;
         appIcon.setToolTip(options.name);
+        appIcon.setImage(nimage);
       });
     }
 

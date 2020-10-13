@@ -86,6 +86,14 @@ export function getAppIconStatus(): string {
   );
 }
 
+export function getAppIconTray(): string {
+  return path.join(
+    __dirname,
+    '..',
+    `icon-tray.${isWindows() ? 'ico' : 'png'}`,
+  );
+}
+
 export function nativeTabsSupported(): boolean {
   return isOSX();
 }

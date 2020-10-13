@@ -51,7 +51,7 @@ async function copyIconsIfNecessary(
   appPath: string,
 ): Promise<void> {
   log.info('Copying icons if necessary');
-  if (!options.packager.icon && !options.nativefier.iconStatus) {
+  if (!options.packager.icon && !options.nativefier.iconStatus && !options.nativefier.iconTray) {
     log.debug('No icon and icon-status specified in options; aborting');
     return;
   }
@@ -72,6 +72,10 @@ async function copyIconsIfNecessary(
     options.nativefier.iconStatus,
   )}`;
   const destIconStatusPath = path.join(destAppPath, destIconStatusFileName);
+  const destIconTrayFileName = `icon-tray${path.extname(
+    options.nativefier.iconTray,
+  )}`;
+  const destIconTrayPath = path.join(destAppPath, destIconTrayFileName);
 
   log.debug(`Copying icon ${options.packager.icon} to`, destIconPath);
   await copyFileOrDir(options.packager.icon, destIconPath);
@@ -81,6 +85,12 @@ async function copyIconsIfNecessary(
     destIconStatusPath,
   );
   await copyFileOrDir(options.nativefier.iconStatus, destIconStatusPath);
+  
+  log.debug(
+    `Copying icon-tray ${options.nativefier.iconTray} to`,
+    destIconTrayPath,
+  );
+  await copyFileOrDir(options.nativefier.iconTray, destIconTrayPath);
 }
 
 function trimUnprocessableOptions(options: AppOptions): void {
